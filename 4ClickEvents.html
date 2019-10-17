@@ -1,0 +1,64 @@
+<! Purpose of this excercie: Learn event handling>
+<html>
+<head>
+	<title>D3 Test</title>
+	<meta charset="utf-8">
+	<script src="http://d3js.org/d3.v5.min.js"></script>
+</head>
+<body>
+	<svg id = "svg1" width = "1000" height = "500">
+	</svg>
+	<svg id = "svg2" width = "1000" height = "500">
+	</svg>
+	
+	<script type="text/javascript">
+		//draw circles in svg1
+		var arr = [{r: 30, color: "red", cx: 100, cy:100},
+                    {r: 40, color: "green", cx: 200, cy:100},		
+                    {r: 50, color: "blue", cx: 300, cy:100}]		
+		circles1 = d3.select("#svg1")
+		  .selectAll("circle")
+		  .data(arr)
+		  .enter()
+		  .append("circle")
+			.attr("r", d => d.r)
+			.attr("fill", d => d.color)
+			.attr("cx", d => d.cx)
+			.attr("cy", d => d.cy)
+			  //bind an event listener to the DOM element using d3.selection.on() method.
+			.on("click", onClickCircles2)
+
+		//draw circles in svg2
+		circles2 = d3.select("#svg2")
+		  .selectAll("circle")
+		  .data(arr)
+		  .enter()
+		  .append("circle")
+			.attr("r", d => d.r)
+			.attr("fill", d => d.color)
+			.attr("cx", d => d.cx)
+			.attr("cy", d => d.cy)
+			.on("click", onClickCircles1)
+
+		function onClickCircles1(d, i) {
+			//change the color of the circle clicked in svg1
+			d3.select(this).attr("fill", "black")
+			
+			//change the color of the corresponding circle in svg2
+			//use selection.nodes() to return an array of all elements of that selection
+			circles2Elements = circles1.nodes()
+			d3.select(circles2Elements[i]).attr("fill", "black")
+		}
+
+		function onClickCircles2(d, i) {
+			//change the color of the circle clicked in svg1
+			d3.select(this).attr("r",d => 2*(d.r))
+			
+			//change the color of the corresponding circle in svg2
+			//use selection.nodes() to return an array of all elements of that selection
+			circles1Elements = circles2.nodes()
+			d3.select(circles1Elements[i]).attr("r",d => 2*(d.r))
+		}
+</script>
+</body>
+</html>

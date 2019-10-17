@@ -1,0 +1,35 @@
+<! Purpose of this excercie: Learn d3.select, d3.selectAll, selection.data>
+<html>
+<head>
+	<title>D3 Test</title>
+	<meta charset="utf-8">
+	<script src="http://d3js.org/d3.v5.min.js"></script>
+</head>
+<body>
+	<div id = "div1">
+		<p> Hello world </p>
+		<p> Hello world </p>
+		<p> Hello world </p>
+		<p> Hello world </p>
+	</div> 	
+	<div id = "div2">
+	</div> 	
+	
+	<script type="text/javascript">
+		//style the color of all paragrahs in div1 
+		d3.select("#div1")
+		  .selectAll("p")
+			.style("color", "green")
+			.style("text-align", "center")
+
+		//create four paragraphs in div2 and style them
+		var arr = [1, 1]
+		d3.select("#div2")
+		  .selectAll("p")
+		  .data(arr)
+		    .text("D3 created Hello world")
+			.style("color", "red")
+			.style("text-align", "center")
+	</script>
+</body>
+</html>

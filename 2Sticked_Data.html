@@ -1,0 +1,35 @@
+<! Purpose of this excercie: Learn how to use data sticked with visual elements>
+<html>
+<head>
+	<title>D3 Test</title>
+	<meta charset="utf-8">
+	<script src="http://d3js.org/d3.v5.min.js"></script>
+</head>
+<body>
+	<div id = "div1">
+	</div> 	
+	<div id = "div2">
+	</div> 	
+	
+	<script type="text/javascript">
+		var arr = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+		d3.select("#div1")
+		  .selectAll("p")
+		  .data(arr)
+		  .enter()
+		  .append("p")
+//		    .text(function (d) {return d})
+		    .text(d => d)
+
+		var arr = ["a", "b", "c", "d", "c"]
+		d3.select("#div2")
+		  .selectAll("p")
+		  .data(arr)
+		  .enter()
+		  .append("p")
+//		    .text(function (d, i) {return "Value is " + d + "; Index is " + i})
+		    .text((d, i) => "Value is " + d + "; Index is " + i)
+
+	</script>
+</body>
+</html>
