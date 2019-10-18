@@ -1,0 +1,80 @@
+<html>
+<head>
+	<title>D3 Test</title>
+	<meta charset="utf-8">
+	<script src="http://d3js.org/d3.v5.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.13.0/d3-legend.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		var width = 700
+		var height = 300
+		
+		d3.select("body").append("svg")
+		  .attr("width", width+250)
+		  .attr("height", height+250)
+		
+		//draw circles in svg
+		var arr = [{x:2, y:7},
+			{x:5, y:3},
+			{x:4, y:7},
+			{x:6, y:5},
+			{x:8, y:5},
+			{x:2, y:4},
+			{x:4, y:12},
+			{x:1, y:3}]
+					
+		var scalex = d3.scaleLinear().domain([0, d3.max(arr.map(e=>e.x))+1]).range([0, width-100])
+		var scaley = d3.scaleLinear().domain([0, d3.max(arr.map(e=>e.y))+2]).range([200, 0])
+		
+		var linear = d3.scaleLinear()
+		.domain([2,13])
+		.range(["rgb(46, 73, 123)", "rgb(71, 187, 94)"]);
+		var linear2 = d3.scaleLinear()
+		.domain([2,13])
+		.range([ "rgb(71, 187, 94)","rgb(46, 73, 123)",]);
+		
+		var g = d3.select("svg").append("g")
+		circles = g.selectAll("circle")
+		  .data(arr)
+		  .enter()
+		  .append("circle")
+			.attr("r", 10)
+			.attr("fill", d=>linear(d.x))
+			.attr("cx", function(d) {return scalex(d.x)})
+			.attr("cy", function(d) {return scaley(d.y)}) 
+
+		var x_axis = d3.axisBottom()
+              .scale(scalex);
+		
+		var y_axis = d3.axisLeft()
+                  .scale(scaley);
+		
+		g.append("g").call(x_axis).attr("transform", "translate(0,200)")
+		g.append("g").call(y_axis).attr("transform", "translate(0,0)")
+		g.attr("transform", "translate(50,50)")
+
+		g.append("g")
+		.attr("class", "legendLinear")
+		.attr("transform", "translate(450,20)");
+		g.append("text")
+		.attr("x", width - 200)
+		.text("Legend values for x")
+
+		var legendLinear = d3.legendColor()
+		.shapeWidth(40)
+		.orient('horizontal')
+		.scale(linear);
+
+		g.select(".legendLinear")
+		.call(legendLinear);
+		
+		
+//Homework Task 1 (2 points): Make each datum a value pair (e.g. {x: 5, y:10}), and draw a scatter plot with x and y axis.
+//Homework Bonus Task 1 (1 point): Tie the color of the circle with the datum (x, y, or both) and display a legend in the scatter plot. For color legend, please refer to: https://bl.ocks.org/zanarmstrong/0b6276e033142ce95f7f374e20f1c1a7
+//To draw the y axis, please refer to https://www.tutorialsteacher.com/d3js/axes-in-d3
+//Homework Task 2 (2 points): In https://www.tutorialsteacher.com/d3js/create-bar-chart-using-d3js, a vertical bar chart is created. Following the example to build your horizontal bar chart. It should have axis, labels, etc. as the example.  
+//Homework Bonus task 2 (0.5 point): Add some animations to your bar chart
+	</script>
+</body>
+</html>
