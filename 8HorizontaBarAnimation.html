@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style> 
+
+.bar { fill: Blue; }
+.highlight { fill: green; }
+
+</style>
+<body>    	
+<script src="http://d3js.org/d3.v5.min.js"></script>
+<script>
+var data = [{"year":"1996","income":15},{"year":"1996","income":55},{"year":"1997","income":30},{"year":"1998","income":50},{"year":"1999","income":70},{"year":"2000","income":85}];
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x = d3.scaleLinear()
+          .range([0, width]);
+var y = d3.scaleBand()
+          .range([height, 0])
+          .padding(0.1);
+
+
+          
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", 
+          "translate(" + margin.left + "," + margin.top + ")");
+
+  
+  data.forEach(function(d) {
+    d.income = +d.income;
+  });
+
+ 
+  x.domain([0, d3.max(data, function(d){ return d.income; })])
+  y.domain(data.map(function(d) { return d.year; }));
+  
+
+  svg.selectAll(".bar")
+      .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("width", function(d) {return x(d.income); } )
+      .attr("y", function(d) { return y(d.year); })
+      .attr("height", y.bandwidth())
+	.on("mouseover", onMouseOver) 
+	  .on("mouseout", onMouseOut) 
+
+  // adding x Axis
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x))
+	  .append("text")
+	  .attr("y", height - 425)
+      .attr("x", width - 50)
+      .attr("text-anchor", "end")
+      .attr("stroke", "black")
+	  .text("Income");
+
+  // adding y Axis
+  svg.append("g")
+      .call(d3.axisLeft(y))
+	  .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("x", height - 600)
+      .attr("y", width - 931)
+      .attr("text-anchor", "end")
+      .attr("stroke", "black")
+      .text("Year");
+	  
+  svg.append("text")
+	 .attr("x", width - 525)
+	 .text("Annual Income")
+
+
+    //mouseover event handler function
+    function onMouseOver(d, i) {
+        d3.select(this).attr('class', 'highlight');
+        d3.select(this)
+          .transition()     // adds animation
+          .duration(400)
+          .attr('height', y.bandwidth() + 5)
+
+        svg.append("text")
+         .attr('class', 'val') 
+         .attr('x', function() {
+             return x(d.income)+15;
+         })
+         .attr('y', function() {
+             return y(d.year)+y.bandwidth()/2;
+         })
+         .text(function() {
+             return [ '$' +d.income+'K'];  // Value of the text
+         });
+    }
+
+    //mouseout event handler function
+    function onMouseOut(d, i) {
+        d3.select(this).attr('class', 'bar');
+        d3.select(this)
+          .transition()     // adds animation
+          .duration(400)
+          .attr('height', y.bandwidth())
+        d3.selectAll('.val')
+          .remove()
+	}
+
+</script>
+</body>
