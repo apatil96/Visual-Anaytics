@@ -1,0 +1,95 @@
+<html>
+<head>
+	<title>D3 Test</title>
+	<meta charset="utf-8">
+	<script src="http://d3js.org/d3.v5.min.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		var width = 1000
+		var height = 800
+		
+		d3.select("body").append("svg")
+		  .attr("width", width)
+		  .attr("height", height)
+		
+		d3.csv("data.csv").then( function(data) {
+			
+		
+		var nodes = []
+		for (i = 0; i < data.length; i++) 
+		{
+		    nodes.push({radius: +data[i].Age})
+			
+		}
+		
+		var links = []
+		for (i = 0; i < data.length; i++) 
+		{
+			if(+data[i].Weight < 209) {
+				id1 = 11
+				id2 = i
+			}else {
+				id1 = 10
+				id2 = i
+			}
+				
+			links.push({source: id1, target: id2})
+			
+			if(data[i].Gender == 'Male') {
+				id1 = 5
+				id2 = i
+			}else {
+				id1 = 8
+				id2 = i
+			}
+				
+			links.push({source: id1, target: id2})
+		}
+
+		var simulation = d3.forceSimulation(nodes)
+			.force('charge', d3.forceManyBody().strength(-2000))
+			.force('center', d3.forceCenter(width / 2, height / 2))
+			.force('collision', d3.forceCollide().radius(function(d) {return d.radius}))
+			.force('link', d3.forceLink().links(links))
+			.on('tick', ticked)
+		
+		var circles = d3.select("svg")
+		  .selectAll("circle")
+		  .data(nodes)
+		  .enter()
+		  .append("circle")
+		    .attr("r", d=>d.radius)
+			
+		var scale = d3.scaleLinear().domain([0, 25]).range([0.1, 0.99])	
+		circles.attr("fill", d=>d3.interpolateTurbo(scale(d.radius)))
+		
+		circles
+   		  .append("svg:title")
+			.text(d=>d.radius)
+
+		var lines = d3.select("svg")
+		  .selectAll("line")
+		  .data(links)
+		  .enter()
+		  .append("line")
+			.attr("stroke", "Red")
+
+
+		function ticked()
+		{
+			circles
+				.attr("cx", d=>d.x)
+				.attr("cy", d=>d.y)
+				
+			lines
+				.attr("x1", function(d) {return d.source.x})
+				.attr("y1", function(d) {return d.source.y})
+				.attr("x2", function(d) {return d.target.x})
+				.attr("y2", function(d) {return d.target.y})
+
+		}
+		})
+	</script>
+</body>
+</html>
