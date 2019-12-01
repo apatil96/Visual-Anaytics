@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+    var ress
+    var text_string = window.localStorage.getItem('user');
+    var i = 0, strLength = text_string.length;
+    for(i; i < strLength; i++) {
+      text_string = text_string.replace(" ", "_");
+      res = text_string.split(",");
+
+
+
+    }
+      var count = count(text_string, res[1])
+
+      function count(main_str, sub_str) 
+    {
+    main_str += '';
+    sub_str += '';
+
+    if (sub_str.length <= 0) 
+    {
+        return main_str.length + 1;
+    }
+
+       subStr = sub_str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+       return (main_str.match(new RegExp(subStr, 'gi')) || []).length;
+    }
+
+      google.charts.load('current', {'packages':['sankey']});
+      google.charts.setOnLoadCallback(drawChart);
+
+function removeDups(names) {
+  let unique = {};
+  names.forEach(function(i) {
+    if(!unique[i]) {
+      unique[i] = true;
+    }
+  });
+  return Object.keys(unique);
+}
+
+var newarr = removeDups(res); 
+
+
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'From');
+        data.addColumn('string', 'To');
+        data.addColumn('number', 'Weight');
+        data.addRows([
+          [ newarr[0], newarr[2], 5 ],
+          [ newarr[0], newarr[3], 7 ],
+          [ newarr[0], newarr[4], 6 ],
+          [ newarr[1], newarr[2], 2 ],
+          [ newarr[1], newarr[3], 9 ],
+          [ newarr[1], newarr[4], 4 ]
+        ]);
+
+        // Sets chart options.
+        var options = {
+          width: 600,
+        };
+
+        // Instantiates and draws our chart, passing in some options.
+        var chart = new google.visualization.Sankey(document.getElementById('sankey_basic'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="sankey_basic" style="width: 900px; height: 300px;"></div>
+  </body>
+</html>
